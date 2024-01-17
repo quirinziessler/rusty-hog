@@ -76,34 +76,34 @@ jobs:
         with:
           name: bins-${{ matrix.build }}
           path: dist
-  dist-lambda:
-    name: Dist Lambda
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v3
-      - name: Install stable-x86_64-unknown-linux-musl toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: x86_64-unknown-linux-musl
-          override: true
-      - name: Build release binaries
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --release --target x86_64-unknown-linux-musl
-      - name: Build archive
-        shell: bash
-        run: |
-          mkdir dist
-          cp ./target/x86_64-unknown-linux-musl/release/*_lambda dist
-      - uses: actions/upload-artifact@v3
-        with:
-          name: bins-lambda
-          path: dist
+  #dist-lambda:
+  #  name: Dist Lambda
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Checkout sources
+  #      uses: actions/checkout@v3
+  #    - name: Install stable-x86_64-unknown-linux-musl toolchain
+  #      uses: actions-rs/toolchain@v1
+  #      with:
+  #        profile: minimal
+  #        toolchain: stable
+  #        target: x86_64-unknown-linux-musl
+  #        override: true
+  #    - name: Build release binaries
+  #      uses: actions-rs/cargo@v1
+  #      with:
+  #        use-cross: true
+  #        command: build
+  #        args: --release --target x86_64-unknown-linux-musl
+  #    - name: Build archive
+  #      shell: bash
+  #      run: |
+  #        mkdir dist
+  #        cp ./target/x86_64-unknown-linux-musl/release/*_lambda dist
+  #    - uses: actions/upload-artifact@v3
+  #      with:
+  #        name: bins-lambda
+  #        path: dist
   dist-docker:
     name: Dist Docker
     runs-on: ubuntu-latest
@@ -131,7 +131,8 @@ jobs:
           path: images.tar
   publish:
     name: Publish Archive
-    needs: [dist-binaries, dist-lambda, dist-docker]
+    #needs: [dist-binaries, dist-lambda, dist-docker]
+    needs: [dist-binaries, dist-docker]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -186,7 +187,8 @@ jobs:
           overwrite: true
   publish-docker:
     name: Publish Docker Images
-    needs: [dist-binaries, dist-lambda, dist-docker]
+    #needs: [dist-binaries, dist-lambda, dist-docker]
+    needs: [dist-binaries, dist-docker]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
