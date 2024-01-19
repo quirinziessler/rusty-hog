@@ -3,4 +3,5 @@ FROM debian:bookworm-slim
 ARG HOG="choctaw"
 ENV HOG_BIN="${HOG}_hog"
 COPY --from=builder /build/target/release/$HOG_BIN /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/${HOG_BIN}"]
+RUN apt-get install -y ca-certificates
+ENTRYPOINT /usr/local/bin/$HOG_BIN
